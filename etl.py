@@ -1,3 +1,5 @@
+### Ary Suri ahs8gup, Brian Yoon byy2yt
+###
 import requests, pgeocode,  pymongo, pprint, os
 import pandas as pd
 
@@ -38,14 +40,69 @@ movieShowData = db['MovieShowData']
 credits = db['Credits']
 titles = db['Titles']
 
-movieShowData.insert_one({"index":"Sensex","data":bestMovieShowByYear.to_dict("records")})
-credits.insert_one({"index":"Sensex","data":rawCredits.to_dict("records")})
-titles.insert_one({"index":"Sensex","data":rawTitles.to_dict("records")})
+movieShowData.delete_many({})
+titles.delete_many({})
+credits.delete_many({})
 
 
+movieShowData.insert_many(bestMovieShowByYear.to_dict("records"))
+credits.insert_many(rawCredits.to_dict("records"))
+titles.insert_many(rawTitles.to_dict("records"))
 
+### MOVIE IN YEAR X
+"What was the top movie in the year "
+'''
+### SHOW IN YEAR X
+for x in movieShowData.find({"RELEASE_YEAR": 2019}):
+    print(x['SHOW_TITLE'])
+    break
 
+### ACTORS IN MOVIE IN YEAR X
+for x in movieShowData.find({"RELEASE_YEAR": 2010}):
+    title = x['MOVIE_TITLE']
 
+for y in titles.find({"title": title}):
+    id = y["id"]
+for z in credits.find({"id": id}):
+    if z["role"] == "ACTOR":
+        print(z['name'])
 
+### ACTORS IN SHOW IN YEAR X
 
+for x in movieShowData.find({"RELEASE_YEAR": 2010}):
+    title = x['SHOW_TITLE']
+
+for y in titles.find({"title": title}):
+    id = y["id"]
+for z in credits.find({"id": id}):
+    if z["role"] == "ACTOR":
+        print(z['name'])
+
+### DIRECTOR IN MOVIE IN YEAR X
+for x in movieShowData.find({"RELEASE_YEAR": 2010}):
+    title = x['MOVIE_TITLE']
+
+for y in titles.find({"title": title}):
+    id = y["id"]
+for z in credits.find({"id": id}):
+    if z["role"] == "DIRECTOR":
+        print(z['name'])
+
+### Director IN SHOW IN YEAR X
+for x in movieShowData.find({"RELEASE_YEAR": 2010}):
+    title = x['SHOW_TITLE']
+
+for y in titles.find({"title": title}):
+    id = y["id"]
+for z in credits.find({"id": id}):
+    if z["role"] == "DIRECTOR":
+        print(z['name'])
+
+### AVERAGE SEASONS of TOP SHOW
+seasons = []
+for x in movieShowData.find():
+    for y in titles.find({"title": x["SHOW_TITLE"]}):
+        seasons.append(y["seasons"])
+        break
+'''
 
